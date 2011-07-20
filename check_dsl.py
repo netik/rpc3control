@@ -2,9 +2,13 @@
 
 """
 
-Check my DSL modem and see if it's still online. 
+check_dsl.py
 
+Check my DSL modem and see if it's still online. 
 If it goes down, issue a reboot on the RPC.
+
+Note that this must be run as root. Ping.py requires root to generate
+raw sockets.
 
 J. Adams <jna@retina.net>
 
@@ -20,9 +24,6 @@ OUTLET=5
 TIMEOUT=5
 
 syslog.syslog(syslog.LOG_NOTICE, 'Checking network.')
-
-sys.exit(0)
-
 
 if __name__ == '__main__': 
     if do_one(UPLINK, TIMEOUT) == None:
