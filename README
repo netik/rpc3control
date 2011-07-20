@@ -1,0 +1,6 @@
+This is a set of classes (and bundled pure-python versions of pexpect and ping) to control a Baytech RPC3. 
+
+I'm using this at home to restart my DSL modem in the event of network failure. 
+
+For an example, see the check_dsl.py script.
+
