@@ -21,8 +21,11 @@ class rpc3Control:
 
     child = None
 
-    def __init__(self, hostname, user=None, password=None):
+    def __init__(self, hostname, user=None, password=None, debug=False):
         self.hostname = hostname
+        self.user = user
+        self.password = password
+        self.debug = debug
         self.connect()
 
         '''
@@ -31,20 +34,34 @@ class rpc3Control:
         '''
 
         if user != None:
-            self.child.expect("Enter username>")
-            self.child.send("%s\r" % user)
+            self.es("Enter username>", user)
 
         if password != None:
-            self.child.expect("Enter password>")
-            self.child.send("%s\r" % password)
+            self.es("Enter password>", password)
+
+    def es(self,str_expect,str_send):
+        ''' 
+        a pexpect helper method; expect and send with error monitoring
+        '''
+
+        result = self.child.expect([str_expect, EOF, TIMEOUT])
+
+        if result == 0: 
+            self.child.send("%s\r" % str_send)
+            return 
         
+        if result > 0:
+            if result == 1: 
+                raise rpc3ControlError("EOF during read")
+            else:
+                raise rpc3ControlError("Timeout during read")
+
     def connect(self):
         if self.child == None:
             self.child = spawn("telnet " + self.hostname)
-            ''' todo; implement login and an option for it. I assume you have logins disabled for now. '''
 
-# Uncomment the next line for debuggin
-#            self.child.logfile = sys.stdout
+        if self.debug == True:
+            self.child.logfile = sys.stdout
 
     def outlet(self,outlet_number,state):
         '''
@@ -59,16 +76,9 @@ class rpc3Control:
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
         
-        self.child.expect("Enter Selection>")
-	self.child.send("1\r")
-        self.child.expect("RPC-3>")
-
-        self.child.send("%s %d\r"  % (state, outlet_number) )
-
-        self.child.send("Y\r")
-        self.child.expect("RPC-3>")
-
-        self.child.send("MENU\r")
+        self.es("Enter Selection>", "1")
+        self.es("RPC-3>", "%s %d\rY"  % (state, outlet_number) )
+        self.es("RPC-3>", "MENU")
 
         return True
 
@@ -78,11 +88,8 @@ class rpc3Control:
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
 
-        self.child.expect("Enter Selection>")
-	self.child.send("1\r")
-
-        self.child.expect("RPC-3>")
-        self.child.send("MENU\r")
+        self.es("Enter Selection>", "1")
+        self.es("RPC-3>", "MENU")
 
         # parse the output
         inlist = False

@@ -20,6 +20,8 @@ from ping import *
 
 UPLINK="75.101.56.1"
 RPC="192.168.2.5"
+RPCUSER="admin"
+RPCPASS="p0werup"
 OUTLET=5
 TIMEOUT=5
 
@@ -30,8 +32,10 @@ if __name__ == '__main__':
         # fuck, the network is down!
         syslog.syslog(syslog.LOG_ERR, 'PING FAILED. Rebooting DSL Modem')
         
-        r = rpc3Control(RPC)
+        r = rpc3Control(RPC,RPCUSER,RPCPASS)
         r.outlet(OUTLET, 'reboot')
+
+        syslog.syslog(syslog.LOG_ERR, 'Reboot complete.')
     else:
         syslog.syslog(syslog.LOG_NOTICE, 'Network is up.')
 
