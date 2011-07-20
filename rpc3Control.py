@@ -6,7 +6,7 @@ from pexpect import *
 import sys
 
 class rpc3Control:
-    "Class to control a Baytech RPC-3"
+    ''' Class to control a Baytech RPC-3   '''
 
     child = None
 
@@ -17,12 +17,20 @@ class rpc3Control:
     def connect(self):
         if self.child == None:
             self.child = spawn("telnet " + self.hostname)
-            " todo; implement login and an option for it. "
-            self.child.logfile = sys.stdout
+            ''' todo; implement login and an option for it. I assume you have logins disabled for now. '''
+
+# Uncomment the next line for debuggin
+#            self.child.logfile = sys.stdout
 
     def outlet(self,outlet_number,state):
-        ''' control an outlet '''
-        ''' state is one of "on","off",or "reboot" ''' 
+        '''
+        control an outlet 
+        state is one of "on","off",or "reboot"
+        outlet_number is an integer. 
+        '''
+
+        if int(outlet_number) > 8 or int(outlet_number) < 1:
+            return None
         
         self.child.expect("Enter Selection>")
 	self.child.send("1\r")
@@ -36,8 +44,10 @@ class rpc3Control:
 
         self.child.send("MENU\r")
 
+        return True
+
     def outlet_status(self, outlet_number):
-        "Get the status table for an outlet"
+        ''' Get the status table for an outlet '''
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
