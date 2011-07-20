@@ -1,9 +1,20 @@
 #!/usr/bin/python
 
-# control an RPC3 using pexpect
+'''
+
+Control Class for the Baytech RPC3 
+J. Adams <jna@retina.net>
+
+'''
 
 from pexpect import *
 import sys
+
+class rpc3ControlError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
 
 class rpc3Control:
     ''' Class to control a Baytech RPC-3   '''
@@ -28,6 +39,9 @@ class rpc3Control:
         state is one of "on","off",or "reboot"
         outlet_number is an integer. 
         '''
+
+        if state not in ("on", "off", "reboot"):
+            raise rpc3ControlError('Invalid outlet state')
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None

@@ -18,7 +18,7 @@ import syslog
 from rpc3Control import *
 from ping import * 
 
-UPLINK="75.101.56.99"
+UPLINK="75.101.56.1"
 RPC="192.168.2.5"
 OUTLET=5
 TIMEOUT=5
