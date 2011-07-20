@@ -24,6 +24,19 @@ class rpc3Control:
     def __init__(self, hostname, user=None, password=None):
         self.hostname = hostname
         self.connect()
+
+        '''
+        the RPC supports username, or password, or both 
+        so we support both of those cases in this code. 
+        '''
+
+        if user != None:
+            self.child.expect("Enter username>")
+            self.child.send("%s\r" % user)
+
+        if password != None:
+            self.child.expect("Enter password>")
+            self.child.send("%s\r" % password)
         
     def connect(self):
         if self.child == None:
@@ -52,7 +65,6 @@ class rpc3Control:
 
         self.child.send("%s %d\r"  % (state, outlet_number) )
 
-        # no reason to wait here, we can send the confirmation
         self.child.send("Y\r")
         self.child.expect("RPC-3>")
 
