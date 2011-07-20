@@ -20,10 +20,34 @@ from ping import *
 
 UPLINK="75.101.56.1"
 RPC="192.168.2.5"
-RPCUSER="admin"
-RPCPASS="p0werup"
+RPCUSER=None
+RPCPASS=None
 OUTLET=5
 TIMEOUT=5
+
+# fetch credentials
+# the credentials should be in a file called ".credentials" and in the form "user:pass" on one line. 
+def load_credentials():
+    user = None
+    pw = None
+
+    try:
+        f = open('.credentialxxs', 'r')
+        credentials = f.readline().rstrip().split(":")
+        user=credentials[0]
+        pw=credentials[1]
+        f.close()
+    except IOError:
+        user=None
+        pw=None
+    except IndexError:
+        syslog.syslog(syslog.LOG_ERR, 'Malformed Credentials file')
+        user=None
+        pw=None
+
+    return (user,pw)
+
+(RPCUSER, RPCPASS) = load_credentials()
 
 syslog.syslog(syslog.LOG_NOTICE, 'Checking network.')
 
@@ -38,8 +62,3 @@ if __name__ == '__main__':
         syslog.syslog(syslog.LOG_ERR, 'Reboot complete.')
     else:
         syslog.syslog(syslog.LOG_NOTICE, 'Network is up.')
-
-
-
-
-        
