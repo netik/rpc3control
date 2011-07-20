@@ -83,7 +83,7 @@ class rpc3Control:
         return True
 
     def outlet_status(self, outlet_number):
-        ''' Get the status table for an outlet '''
+        ''' Get the status of an outlet '''
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
