@@ -32,7 +32,7 @@ def load_credentials():
     pw = None
 
     try:
-        f = open('.credentialxxs', 'r')
+        f = open('.credentials', 'r')
         credentials = f.readline().rstrip().split(":")
         user=credentials[0]
         pw=credentials[1]
@@ -41,7 +41,10 @@ def load_credentials():
         user=None
         pw=None
     except IndexError:
-        syslog.syslog(syslog.LOG_ERR, 'Malformed Credentials file')
+        err = 'FATAL: Malformed Credentials file. Credentails should be in the form \"user:pw\"'
+        syslog.syslog(syslog.LOG_ERR, err)
+        print >> sys.stderr, err
+        sys.exit(1)
         user=None
         pw=None
 
