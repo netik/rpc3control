@@ -13,7 +13,6 @@ import syslog
 from rpc3Control import *
 from ping import * 
 
-UPLINK="75.101.56.3"
 RPC=None
 RPCUSER=None
 RPCPASS=None
