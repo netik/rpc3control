@@ -9,6 +9,7 @@ J. Adams <jna@retina.net>
 
 from pexpect import *
 import sys
+import re
 
 class rpc3ControlError(Exception):
     def __init__(self, value):
@@ -94,22 +95,26 @@ class rpc3Control:
         # parse the output
         inlist = False
         status = {}
+        name = {}
 
         for line in self.child.before.split('\n'):
             if line.rstrip() == "" and inlist:
                 inlist = False
 
             if inlist:
-                words = line.split()
-                if words[3] == "On":
-                    status[int(words[0])] = True
+                m = re.match('^ .....([0-9]) ..... (...........) ([0-9]) ..... (On|Off)',line)
+
+                name[outlet_number] = m.group(2).rstrip()
+
+                if m.group(4) == "On":
+                    status[int(m.group(1))] = True
                 else:
-                    status[int(words[0])] = False
+                    status[int(m.group(1))] = False
 
             if line.find("Status") != -1:
                 inlist = True
 
-        return status[outlet_number]
+        return (status[outlet_number],name[outlet_number])
 
 # fetch credentials
 # the credentials should be in a file called ".credentials" and in the form "hostname:user:pass" on one line. 
@@ -121,14 +126,11 @@ def load_credentials():
 
     try:
         f = open('/retina/check_dsl/.credentials', 'r')
-        credentials = f.readline().rstrip().split(":")
-        rpc=credentials[0]
-        user=credentials[1]
-        pw=credentials[2]
+        (rpc, user, pw) = f.readline().rstrip().split(":")
         f.close()
     except IOError:
         err = "FATAL: Couldn't open .credentials file"
-    except IndexError:
+    except ValueError:
         err = 'FATAL: Malformed .credentials file. Credentails should be in the form \"host:user:pw\"'
 
     if err != None:

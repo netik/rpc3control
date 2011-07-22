@@ -36,6 +36,7 @@ if (outlet < 1 or outlet > 8) or (state not in ['on','off','reboot','status']):
 
 r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
 if state == 'status':
-    print r.outlet_status(outlet)
+    (status,name) = r.outlet_status(outlet)
+    print "Outlet %d \"%s\" is %s" % (outlet, name, ["off","on"][int(status)])
 else:
     r.outlet(outlet, state)
