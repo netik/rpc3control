@@ -19,49 +19,22 @@ from rpc3Control import *
 from ping import * 
 
 UPLINK="75.101.56.1"
-RPC="192.168.2.5"
+RPC=None
 RPCUSER=None
 RPCPASS=None
 OUTLET=5
 TIMEOUT=5
 
-# fetch credentials
-# the credentials should be in a file called ".credentials" and in the form "user:pass" on one line. 
-def load_credentials():
-    user = None
-    pw = None
+(RPC, RPCUSER, RPCPASS) = load_credentials()
 
-    try:
-        f = open('.credentials', 'r')
-        credentials = f.readline().rstrip().split(":")
-        user=credentials[0]
-        pw=credentials[1]
-        f.close()
-    except IOError:
-        user=None
-        pw=None
-    except IndexError:
-        err = 'FATAL: Malformed Credentials file. Credentails should be in the form \"user:pw\"'
-        syslog.syslog(syslog.LOG_ERR, err)
-        print >> sys.stderr, err
-        sys.exit(1)
-        user=None
-        pw=None
-
-    return (user,pw)
-
-(RPCUSER, RPCPASS) = load_credentials()
-
-syslog.syslog(syslog.LOG_NOTICE, 'Checking network.')
+# syslog.syslog(syslog.LOG_NOTICE, 'Checking network.')
 
 if __name__ == '__main__': 
     if do_one(UPLINK, TIMEOUT) == None:
         # fuck, the network is down!
-        syslog.syslog(syslog.LOG_ERR, 'PING FAILED. Rebooting DSL Modem')
+        syslog.syslog(syslog.LOG_NOTICE, 'PING FAILED. Rebooting DSL Modem')
         
-        r = rpc3Control(RPC,RPCUSER,RPCPASS)
+        r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
         r.outlet(OUTLET, 'reboot')
 
-        syslog.syslog(syslog.LOG_ERR, 'Reboot complete.')
-    else:
-        syslog.syslog(syslog.LOG_NOTICE, 'Network is up.')
+        syslog.syslog(syslog.LOG_NOTICE, 'Reboot complete.')
