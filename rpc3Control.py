@@ -112,11 +112,12 @@ class rpc3Control:
         return status[outlet_number]
 
 # fetch credentials
-# the credentials should be in a file called ".credentials" and in the form "user:pass" on one line. 
+# the credentials should be in a file called ".credentials" and in the form "hostname:user:pass" on one line. 
 def load_credentials():
     user = None
     pw = None
     rpc = None
+    err = None
 
     try:
         f = open('/retina/check_dsl/.credentials', 'r')
@@ -126,12 +127,11 @@ def load_credentials():
         pw=credentials[2]
         f.close()
     except IOError:
-        err = "FATAL: Couldn't open credentials file"
-        syslog.syslog(syslog.LOG_ERR, err)
-        print >> sys.stderr, err
-        sys.exit(1)
+        err = "FATAL: Couldn't open .credentials file"
     except IndexError:
-        err = 'FATAL: Malformed Credentials file. Credentails should be in the form \"host:user:pw\"'
+        err = 'FATAL: Malformed .credentials file. Credentails should be in the form \"host:user:pw\"'
+
+    if err != None:
         syslog.syslog(syslog.LOG_ERR, err)
         print >> sys.stderr, err
         sys.exit(1)
