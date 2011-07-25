@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-'''
+"""
 
 Control Class for the Baytech RPC3 
 J. Adams <jna@retina.net>
 
-'''
+"""
 
 from pexpect import *
 import sys
@@ -18,7 +18,7 @@ class rpc3ControlError(Exception):
         return repr(self.value)
 
 class rpc3Control:
-    ''' Class to control a Baytech RPC-3   '''
+    """ Class to control a Baytech RPC-3 """
 
     child = None
 
@@ -29,10 +29,10 @@ class rpc3Control:
         self.debug = debug
         self.connect()
 
-        '''
+        """
         the RPC supports username, or password, or both 
         so we support both of those cases in this code. 
-        '''
+        """
 
         if user != None:
             self.es("Enter username>", user)
@@ -41,9 +41,9 @@ class rpc3Control:
             self.es("Enter password>", password)
 
     def es(self,str_expect,str_send):
-        ''' 
+        """ 
         a pexpect helper method; expect and send with error monitoring
-        '''
+        """
 
         result = self.child.expect([str_expect, EOF, TIMEOUT])
 
@@ -65,11 +65,11 @@ class rpc3Control:
             self.child.logfile = sys.stdout
 
     def outlet(self,outlet_number,state):
-        '''
+        """
         control an outlet 
         state is one of "on","off",or "reboot"
         outlet_number is an integer. 
-        '''
+        """
 
         if state not in ("on", "off", "reboot"):
             raise rpc3ControlError('Invalid outlet state')
@@ -84,7 +84,7 @@ class rpc3Control:
         return True
 
     def outlet_status(self, outlet_number):
-        ''' Get the status of an outlet '''
+        """ Get the status of an outlet """
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
