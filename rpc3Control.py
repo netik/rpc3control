@@ -10,6 +10,7 @@ J. Adams <jna@retina.net>
 from pexpect import *
 import sys
 import re
+import syslog
 
 class rpc3ControlError(Exception):
     def __init__(self, value):
@@ -24,6 +25,7 @@ class rpc3Control:
     status = {} 
     name = {}
     statuscached = False
+    unitid = ""
 
     def __init__(self, hostname, user=None, password=None, debug=False):
         self.hostname = hostname
@@ -31,12 +33,17 @@ class rpc3Control:
         self.password = password
         self.debug = debug
         self.connect()
+        self.unitid = ""
 
         """
         the RPC supports username, or password, or both 
         so we support both of those cases in this code. 
         """
 
+        """ get unit id """
+        self.child.expect(["Unit ID: (.*)", EOF, TIMEOUT]) 
+        self.unitid = self.child.match.group(1)
+        
         if user != None:
             self.es("Enter username>", user)
 
@@ -125,20 +132,20 @@ class rpc3Control:
 
 # fetch credentials
 # the credentials should be in a file called ".credentials" and in the form "hostname:user:pass" on one line. 
-def load_credentials():
+def load_credentials(credentials = "/retina/check_dsl/.credentials" ):
     user = None
     pw = None
     rpc = None
     err = None
 
     try:
-        f = open('/retina/check_dsl/.credentials', 'r')
+        f = open(credentials, 'r')
         (rpc, user, pw) = f.readline().rstrip().split(":")
         f.close()
     except IOError:
-        err = "FATAL: Couldn't open .credentials file"
+        err = "FATAL: Couldn't open credentials file"
     except ValueError:
-        err = 'FATAL: Malformed .credentials file. Credentails should be in the form \"host:user:pw\"'
+        err = "FATAL: Malformed %s file. Credentails should be in the form \"host:user:pw\"" % credentials
 
     if err != None:
         syslog.syslog(syslog.LOG_ERR, err)
