@@ -21,6 +21,9 @@ class rpc3Control:
     """ Class to control a Baytech RPC-3 """
 
     child = None
+    status = {} 
+    name = {}
+    statuscached = False
 
     def __init__(self, hostname, user=None, password=None, debug=False):
         self.hostname = hostname
@@ -81,10 +84,15 @@ class rpc3Control:
         self.es("RPC-3>", "%s %d\rY"  % (state, outlet_number) )
         self.es("RPC-3>", "MENU")
 
+        self.statuscached = False
+
         return True
 
     def outlet_status(self, outlet_number):
         """ Get the status of an outlet """
+        
+        if self.statuscached == True:
+            return (self.status[outlet_number],self.name[outlet_number])
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
             return None
@@ -94,8 +102,6 @@ class rpc3Control:
 
         # parse the output
         inlist = False
-        status = {}
-        name = {}
 
         for line in self.child.before.split('\n'):
             if line.rstrip() == "" and inlist:
@@ -103,18 +109,19 @@ class rpc3Control:
 
             if inlist:
                 m = re.match('^ .....([0-9]) ..... (...........) ([0-9]) ..... (On|Off)',line)
-
-                name[outlet_number] = m.group(2).rstrip()
+                
+                self.name[int(m.group(1))] = m.group(2).rstrip()
 
                 if m.group(4) == "On":
-                    status[int(m.group(1))] = True
+                    self.status[int(m.group(1))] = True
                 else:
-                    status[int(m.group(1))] = False
+                    self.status[int(m.group(1))] = False
 
             if line.find("Status") != -1:
                 inlist = True
 
-        return (status[outlet_number],name[outlet_number])
+        self.statuscached = True
+        return (self.status[outlet_number],self.name[outlet_number])
 
 # fetch credentials
 # the credentials should be in a file called ".credentials" and in the form "hostname:user:pass" on one line. 
