@@ -55,19 +55,31 @@ def display_outlets():
 
         print "<INPUT TYPE=\"RADIO\" NAME=\"OUTLET-%d\" VALUE=0 %s> Off" % (i, ["CHECKED",""][status])
         print "<INPUT TYPE=\"RADIO\" NAME=\"OUTLET-%d\" VALUE=1 %s> On" % (i, ["","CHECKED"][status])
+        print "<INPUT TYPE=\"RADIO\" NAME=\"OUTLET-%d\" VALUE=2> Reboot" %i
         print "</TD></TR>"
 
         i = i + 1 
 
+#    print "<TR><TD COLSPAN=2 ALIGN=CENTER>&nbsp;</TD></TR>"
+    print "<TR><TD COLSPAN=2 ALIGN=CENTER>"
+    print "<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMIT\" VALUE=\"Apply\" class=\"button\" ></font>"
+    print "</TD></TR>"
     print "</TABLE>"
-    print "<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMIT\" VALUE=\"Apply\">"
 
 print "<HTML><HEAD>"
-print "<TITLE>rpc3 Power Control: %s </TITLE>" % RPC
+print "<TITLE>RPC3 Power Control: %s (%s)</TITLE>" % (r.unitid, RPC)
 print '<link rel="stylesheet" href="http://www.retina.net/w/wp-content/themes/hemingway-019/style.css">'
 
 print "</HEAD>"
 print "<BODY>"
+print "<style>"
+print ".button {"
+print "    padding: 10px 10px 10px 10px;"
+print "    font-size: 18px;"
+print "}"
+
+print "</style>"
+
 
 check_access()
 
@@ -75,18 +87,21 @@ print "<FORM METHOD=POST>"
 
 form = cgi.FieldStorage()
 
+print "<P><font size=+3>Baytech RPC3: %s (%s)</font></p>" % (r.unitid, RPC)
+
 if "SUBMIT" in form:
     i=1
     while i <= 8:
         if form["OLDOUTLET-%d" % i].value != form["OUTLET-%d" % i].value: 
-            r.outlet(i, ["off","on"][int(form["OUTLET-%d" % i].value)])
+            r.outlet(i, ["off","on", "reboot"][int(form["OUTLET-%d" % i].value)])
             print "<P>"
-            print "Changed Outlet %d" % i 
-            print "from %s to %s " % (form["OLDOUTLET-%d" % i].value, form["OUTLET-%d" % i].value)
+
+            print "<B>Outlet %d</B>: %s." % (i,["turned off", "turned on", "rebooted"][int(form["OUTLET-%d" % i].value)])
+
             print "</P>"
         i = i + 1
 
-print "<P><font size=+3>RPC (%s) at %s</font></p>" % (r.unitid, RPC)
+
 display_outlets()
 
 print "</FORM></BODY></HTML>"
