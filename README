@@ -1,8 +1,10 @@
-This is a set of classes (and bundled pure-python versions of pexpect and ping) to control a Baytech RPC3. 
+This is a set of classes (and bundled pure-python versions of pexpect
+and ping) to control a Baytech RPC3. 
 
-I'm using this at home to restart my DSL modem in the event of network failure. 
+pexpect is courtesy of Noah Spurrier <http://www.noah.org/wiki/pexpect>
 
-For an example, see the check_dsl.py script.
+Pure Python Ping code Ping is Copyright (c) Matthew Dixon Cowles,
+<http://www.visi.com/~mdc/>.
 
 USAGE
 -----
@@ -34,6 +36,10 @@ r.outlet(5,"reboot")
 To get status, use outlet_status, which will return True or False for On or Off.
 
 state = r.outlet_status(5)
+
+I'm using this at home to restart my DSL modem in the event of network failure. 
+
+For a more indepth example, see the check_dsl.py script.
 
 ---
 John Adams
