@@ -1,10 +1,11 @@
 This is a set of classes (and bundled pure-python versions of pexpect
 and ping) to control a Baytech RPC3. 
 
-pexpect is courtesy of Noah Spurrier <http://www.noah.org/wiki/pexpect>
+pexpect is courtesy of Noah Spurrier 
+http://www.noah.org/wiki/pexpect
 
 Pure Python Ping code Ping is Copyright (c) Matthew Dixon Cowles,
-<http://www.visi.com/~mdc/>.
+http://www.visi.com/~mdc/
 
 USAGE
 -----
