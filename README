@@ -21,6 +21,7 @@ from rpc3Control import *
 (RPC, RPCUSER, RPCPASS) = load_credentials("filename")
 
 Control is pretty straightfoward. First, connect to the RPC:
+(Instantiating an instance of the class will handle the initial connection)
 
 r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
 
@@ -29,3 +30,11 @@ r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
 r.outlet(5,"on")
 r.outlet(5,"off")
 r.outlet(5,"reboot")
+
+To get status, use outlet_status, which will return True or False for On or Off.
+
+state = r.outlet_status(5)
+
+---
+John Adams
+November, 2011
