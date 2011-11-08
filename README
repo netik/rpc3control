@@ -4,3 +4,28 @@ I'm using this at home to restart my DSL modem in the event of network failure.
 
 For an example, see the check_dsl.py script.
 
+USAGE
+-----
+
+Create a file in your working directory called ".credentials". This file
+should contain the following:
+
+IP address of RPC3:username:password
+
+Then, in your script, you can call:
+
+from rpc3Control import *
+(RPC, RPCUSER, RPCPASS) = load_credentials()
+
+""" or, if you change the credentials filename, you can do... """
+(RPC, RPCUSER, RPCPASS) = load_credentials("filename")
+
+Control is pretty straightfoward. First, connect to the RPC:
+
+r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
+
+...and then you can issue commands, like:
+
+r.outlet(5,"on")
+r.outlet(5,"off")
+r.outlet(5,"reboot")

@@ -132,7 +132,7 @@ class rpc3Control:
 
 # fetch credentials
 # the credentials should be in a file called ".credentials" and in the form "hostname:user:pass" on one line. 
-def load_credentials(credentials = "/retina/check_dsl/.credentials" ):
+def load_credentials(credentials = ".credentials" ):
     user = None
     pw = None
     rpc = None

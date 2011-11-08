@@ -25,7 +25,7 @@ RPCPASS=None
 OUTLET=5
 TIMEOUT=5
 
-(RPC, RPCUSER, RPCPASS) = load_credentials()
+(RPC, RPCUSER, RPCPASS) = load_credentials("/retina/check_dsl/.credentials")
 
 # syslog.syslog(syslog.LOG_NOTICE, 'Checking network.')
 
