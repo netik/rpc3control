@@ -34,7 +34,7 @@ state  = sys.argv[2]
 if (outlet < 1 or outlet > 8) or (state not in ['on','off','reboot','status']):
     usage()
 
-r = rpc3Control(RPC, RPCUSER, RPCPASS, False)
+r = rpc3Control(RPC, RPCUSER, RPCPASS, True)
 if state == 'status':
     (status,name) = r.outlet_status(outlet)
     print "Outlet %d \"%s\" is %s" % (outlet, name, ["off","on"][int(status)])

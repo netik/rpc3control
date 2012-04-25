@@ -95,10 +95,10 @@ class rpc3Control:
 
         return True
 
-    def outlet_status(self, outlet_number):
+    def outlet_status(self, outlet_number, ignore_cache = False):
         """ Get the status of an outlet """
         
-        if self.statuscached == True:
+        if self.statuscached == True and ignore_cache != True:
             return (self.status[outlet_number],self.name[outlet_number])
 
         if int(outlet_number) > 8 or int(outlet_number) < 1:
