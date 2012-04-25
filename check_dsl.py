@@ -40,7 +40,7 @@ if __name__ == '__main__':
         if result != None:
             # we're good. 
             syslog.syslog(syslog.LOG_NOTICE, "PING OK. Try #%d" % count)
-            sys.exit(1)
+            sys.exit(0)
 
         syslog.syslog(syslog.LOG_NOTICE, "PING FAILED. Try #%d" % count)
         count += 1
@@ -52,3 +52,4 @@ if __name__ == '__main__':
     r.outlet(OUTLET, 'reboot')
 
     syslog.syslog(syslog.LOG_NOTICE, 'Reboot complete.')
+    sys.exit(1)
