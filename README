@@ -7,21 +7,23 @@ http://www.noah.org/wiki/pexpect
 Pure Python Ping code Ping is Copyright (c) Matthew Dixon Cowles,
 http://www.visi.com/~mdc/
 
+Uses jQuery 1.7.2 and jqTouch for iPhone/iPad like access.
+
 USAGE
 -----
 
 Create a file in your working directory called ".credentials". This file
 should contain the following:
 
-IP address of RPC3:username:password
+IP address of RPC3:username:password:webip1,webip2,webip3... 
 
 Then, in your script, you can call:
 
 from rpc3Control import *
-(RPC, RPCUSER, RPCPASS) = load_credentials()
+(RPC, RPCUSER, RPCPASS, WHITELIST) = load_credentials()
 
 """ or, if you change the credentials filename, you can do... """
-(RPC, RPCUSER, RPCPASS) = load_credentials("filename")
+(RPC, RPCUSER, RPCPASS, WHITELIST) = load_credentials("filename")
 
 Control is pretty straightfoward. First, connect to the RPC:
 (Instantiating an instance of the class will handle the initial connection)
@@ -42,6 +44,19 @@ I'm using this at home to restart my DSL modem in the event of network failure.
 
 For a more indepth example, see the check_dsl.py script.
 
+Web Access
+----------
+
+Included with this code is a functional, HTML5/CSS administration
+system that can be used to control your devices from an iPhone, iPad,
+or web browser.
+
+To use, copy the "web" folder to your webserver, ensure that index.cgi
+can be executed as a cgi and that rpc3Control.py can be accessed from
+your web server, either by installing it system wide or by copying it
+into the web folder.
+
 ---
 John Adams
-November, 2011
+May, 2012
+
