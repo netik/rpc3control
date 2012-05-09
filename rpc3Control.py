@@ -137,10 +137,12 @@ def load_credentials(credentials = ".credentials" ):
     pw = None
     rpc = None
     err = None
+    whitelist = None
 
     try:
         f = open(credentials, 'r')
-        (rpc, user, pw) = f.readline().rstrip().split(":")
+        (rpc, user, pw, w) = f.readline().rstrip().split(":")
+        whitelist = w.split(",")
         f.close()
     except IOError:
         err = "FATAL: Couldn't open credentials file"
@@ -152,4 +154,4 @@ def load_credentials(credentials = ".credentials" ):
         print >> sys.stderr, err
         sys.exit(1)
 
-    return (rpc,user,pw)
+    return (rpc,user,pw,whitelist)
