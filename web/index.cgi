@@ -113,17 +113,21 @@ print "</div>"
 if os.getenv('REQUEST_METHOD') == "POST":
     i=1
     print "<UL>"
+    print "<div class='info'>"
     while i <= 8:
+        (status,name) = r.outlet_status(i)
         # reboot takes priority here. 
         # if you reboot an outlet, it will go back to it's original state post-reboot.
         if (form.getvalue("REBOOT-%d" % i) != None):
             r.outlet(i,"reboot")
-            print "<B>Outlet %d</B>: Rebooted<BR>" % i 
+            print "<P>Outlet %d</B>: %s - Rebooted</P>" % (i,name)
         else: 
             if (form.getvalue("OLDOUTLET-%d" % i) or "0") != (form.getvalue("OUTLET-%d" % i) or "0"):
                 r.outlet(i, ["off","on", "reboot"][int((form.getvalue("OUTLET-%d" % i) or "0"))])
-                print "<B>Outlet %d</B>: %s<BR>" % (i,["turned off", "turned on"][int((form.getvalue("OUTLET-%d" % i) or "0"))])
+                print "<P>Outlet %d</B>:%s - %s</P>" % (i,name,["turned off", "turned on"][int((form.getvalue("OUTLET-%d" % i) or "0"))])
         i = i + 1
+
+    print "</div>"
 
 display_reboots()
 display_outlets()
