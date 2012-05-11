@@ -147,7 +147,7 @@ def load_credentials(credentials = ".credentials" ):
     except IOError:
         err = "FATAL: Couldn't open credentials file"
     except ValueError:
-        err = "FATAL: Malformed %s file. Credentails should be in the form \"host:user:pw\"" % credentials
+        err = "FATAL: Malformed %s file. Credentails should be in the form \"host:user:pw:web_whitelist\"" % credentials
 
     if err != None:
         syslog.syslog(syslog.LOG_ERR, err)
