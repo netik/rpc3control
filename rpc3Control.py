@@ -143,7 +143,7 @@ def load_credentials(credentials = ".credentials" ):
 
     try:
         f = open(credentials, 'r')
-        (rpc, user, pw, w) = f.readline().rstrip().split(":")
+        (rpc, user, pw, w) = f.readline().rstrip().split(":",3)
         whitelist = w.split(",")
         f.close()
     except IOError:
